@@ -30,7 +30,8 @@ models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
 
 # --- CORS Ayarları ---
-origins = ["http://localhost:3000"]
+origins = ["http://localhost:3000",
+    "https://mia-doc-projesi-zmsw.vercel.app",]
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
