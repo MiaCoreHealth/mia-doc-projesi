@@ -1,0 +1,10 @@
+# Python
+venv/
+__pycache__/
+*.pyc
+mia-doc.db
+
+# Node
+node_modules/
+build/
+.DS_Store
