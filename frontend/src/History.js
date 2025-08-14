@@ -18,7 +18,7 @@ function History() {
       }
 
       try {
-        const response = await axios.get('http://127.0.0.1:8000/reports/history/', {
+        const response = await axios.get('https://mia-doc-projesi.onrender.com/reports/history/', {
           headers: { 'Authorization': `Bearer ${token}` }
         });
 

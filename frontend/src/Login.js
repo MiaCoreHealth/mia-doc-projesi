@@ -18,7 +18,7 @@ function Login({ onLoginSuccess }) {
     params.append('password', password);
 
     try {
-      const response = await axios.post('http://127.0.0.1:8000/token', params);
+      const response = await axios.post('https://mia-doc-projesi.onrender.com/token', params);
 
       // Giriş başarılıysa, backend'den gelen token'ı (giriş kartını)
       // tarayıcının yerel hafızasına (localStorage) kaydediyoruz.
