@@ -4,32 +4,19 @@ import React, { useState } from 'react';
 import axios from 'axios';
 
 function Register() {
-  // Kullanıcının forma girdiği e-posta ve şifreyi saklamak için state'ler
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
-  // Backend'den gelen başarı veya hata mesajını kullanıcıya göstermek için bir state
   const [message, setMessage] = useState('');
 
-  // Form gönderildiğinde çalışacak olan fonksiyon
   const handleSubmit = async (event) => {
-    // Formun sayfayı yeniden yüklemesini engelle
     event.preventDefault();
-
     try {
-      // axios ile backend'deki /register/ endpoint'ine POST isteği gönderiyoruz.
-      // Gönderdiğimiz veri, kullanıcının girdiği email ve password'den oluşuyor.
       const response = await axios.post('https://mia-doc-projesi.onrender.com/register/', {
-    email: email,
-    password: password
-});
-
-      // İstek başarılı olursa, backend'den gelen mesajı alıp state'e kaydediyoruz.
+        email: email,
+        password: password
+      });
       setMessage(response.data.mesaj);
-
     } catch (error) {
-      // Eğer bir hata olursa (örn: e-posta zaten kayıtlıysa),
-      // backend'in gönderdiği hata detayını yakalayıp state'e kaydediyoruz.
       if (error.response) {
         setMessage(error.response.data.detail);
       } else {
@@ -38,38 +25,43 @@ function Register() {
     }
   };
 
-  // Ekranda görünecek olan HTML (JSX) kodları
+  // ---- GÖRSEL DEĞİŞİKLİKLER BURADA ----
   return (
-    <div style={{ maxWidth: '400px', margin: '50px auto', padding: '20px', border: '1px solid #ccc', borderRadius: '10px' }}>
-      <h2>Kayıt Ol</h2>
-      <form onSubmit={handleSubmit}>
-        <div style={{ marginBottom: '15px' }}>
-          <label>E-posta Adresi</label>
-          <input
-            type="email"
-            value={email}
-            onChange={e => setEmail(e.target.value)}
-            required
-            style={{ width: '100%', padding: '8px', marginTop: '5px' }}
-          />
-        </div>
-        <div style={{ marginBottom: '15px' }}>
-          <label>Şifre</label>
-          <input
-            type="password"
-            value={password}
-            onChange={e => setPassword(e.target.value)}
-            required
-            style={{ width: '100%', padding: '8px', marginTop: '5px' }}
-          />
-        </div>
-        <button type="submit" style={{ width: '100%', padding: '10px', backgroundColor: '#007bff', color: 'white', border: 'none', borderRadius: '5px' }}>
-          Kayıt Ol
-        </button>
-      </form>
-
-      {/* Mesaj varsa, bu mesajı ekranın altında göster */}
-      {message && <p style={{ marginTop: '20px', textAlign: 'center' }}>{message}</p>}
+    <div className="card shadow-sm" style={{ width: '22rem' }}>
+      <div className="card-body">
+        <h2 className="card-title text-center mb-4">Kayıt Ol</h2>
+        <form onSubmit={handleSubmit}>
+          <div className="mb-3">
+            <label htmlFor="registerEmail" className="form-label">E-posta Adresi</label>
+            <input
+              type="email"
+              className="form-control"
+              id="registerEmail"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              required
+            />
+          </div>
+          <div className="mb-3">
+            <label htmlFor="registerPassword" className="form-label">Şifre</label>
+            <input
+              type="password"
+              className="form-control"
+              id="registerPassword"
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+              required
+            />
+          </div>
+          <div className="d-grid">
+            <button type="submit" className="btn btn-primary">
+              Kayıt Ol
+            </button>
+          </div>
+        </form>
+        {message && <p className="mt-3 text-center text-success">{message.includes('başarıyla') ? message : ''}</p>}
+        {message && <p className="mt-3 text-center text-danger">{!message.includes('başarıyla') ? message : ''}</p>}
+      </div>
     </div>
   );
 }

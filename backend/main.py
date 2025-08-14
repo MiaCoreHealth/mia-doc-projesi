@@ -30,8 +30,12 @@ models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
 
 # --- CORS Ayarları ---
-origins = ["http://localhost:3000",
-    "https://mia-doc-projesi-zmsw.vercel.app",]
+origins = [
+    "http://localhost:3000",
+    "https://mia-doc-projesi-zmsw.vercel.app",
+    "http://mia-doc-projesi-zmsw.vercel.app", # http versiyonu
+    "https://www.mia-doc-projesi-zmsw.vercel.app", # www'li versiyon
+]
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
@@ -138,3 +142,7 @@ async def analyze_report(file: UploadFile = File(...), current_user: models.User
 def get_user_reports(current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
     reports = db.query(models.Report).filter(models.Report.owner_id == current_user.id).order_by(models.Report.upload_date.desc()).all()
     return reports
+    # YENİ: Giriş yapmış olan kullanıcının bilgilerini döndüren endpoint
+@app.get("/users/me/", response_model=schemas.User)
+def read_users_me(current_user: models.User = Depends(get_current_user)):
+    return current_user

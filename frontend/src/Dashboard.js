@@ -2,24 +2,22 @@
 
 import React, { useState } from 'react';
 import axios from 'axios';
-import History from './History'; // Yeni History bileşenini içe aktarıyoruz
+import History from './History'; // History bileşenini hala kullanıyoruz
 
 function Dashboard({ handleLogout }) {
   const [file, setFile] = useState(null);
   const [analysisResult, setAnalysisResult] = useState('');
   const [message, setMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  // YENİ: History bileşenini yenilemek için kullanılacak bir state
   const [historyKey, setHistoryKey] = useState(0);
 
+  // --- Fonksiyonlar aynı, değişiklik yok ---
   const handleFileChange = (event) => {
     setFile(event.target.files[0]);
     setAnalysisResult('');
     setMessage('');
   };
-
   const handleAnalyze = async () => {
-    // ... (handleAnalyze fonksiyonunun başı aynı)
     if (!file) {
       setMessage('Lütfen önce bir rapor dosyası seçin.');
       return;
@@ -29,13 +27,12 @@ function Dashboard({ handleLogout }) {
     setAnalysisResult('');
     const token = localStorage.getItem('userToken');
     if (!token) {
-      setMessage('Giriş yapılmamış veya oturum süresi dolmuş. Lütfen tekrar giriş yapın.');
+      setMessage('Giriş yapılmamış veya oturum süresi dolmuş.');
       setIsLoading(false);
       return;
     }
     const formData = new FormData();
     formData.append('file', file);
-
     try {
       const response = await axios.post('https://mia-doc-projesi.onrender.com/report/analyze/', formData, {
         headers: {
@@ -43,12 +40,8 @@ function Dashboard({ handleLogout }) {
           'Content-Type': 'multipart/form-data',
         },
       });
-
       setAnalysisResult(response.data.analysis_result);
-      // YENİ: Analiz başarılı olduğunda, historyKey'i değiştirerek
-      // History bileşeninin yeniden yüklenmesini tetikliyoruz.
       setHistoryKey(prevKey => prevKey + 1);
-
     } catch (error) {
       if (error.response) {
         setMessage(`Hata: ${error.response.data.detail}`);
@@ -60,32 +53,46 @@ function Dashboard({ handleLogout }) {
     }
   };
 
+  // ---- GÖRSEL DEĞİŞİKLİKLER BURADA ----
   return (
-    <div style={{ padding: '20px' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <h2>MİA-DOC Analiz Paneli</h2>
-        <button onClick={handleLogout} /* ... */ >Çıkış Yap</button>
-      </div>
-      <p>Lütfen analiz etmek istediğiniz rapor dosyasını (.jpg, .png) seçin.</p>
-
-      <div style={{ margin: '20px 0' }}>
-        <input type="file" accept="image/png, image/jpeg" onChange={handleFileChange} />
-        <button onClick={handleAnalyze} disabled={isLoading} /* ... */ >
-          {isLoading ? 'Analiz Ediliyor...' : 'Analiz Et'}
-        </button>
-      </div>
-
-      {message && <p style={{ color: 'red' }}>{message}</p>}
-
-      {analysisResult && (
-        <div style={{ /* ... */ }}>
-          <h3>Yeni Analiz Sonucu:</h3>
-          <p>{analysisResult}</p>
+    <div>
+      <nav className="navbar navbar-expand-lg navbar-light bg-light rounded mb-4 shadow-sm">
+        <div className="container-fluid">
+          <span className="navbar-brand">Analiz Paneli</span>
+          <button onClick={handleLogout} className="btn btn-outline-danger">
+            Çıkış Yap
+          </button>
         </div>
-      )}
+      </nav>
 
-      {/* YENİ: History bileşenini buraya ekliyoruz */}
-      <hr style={{ margin: '40px 0' }} />
+      <div className="card shadow-sm">
+        <div className="card-body">
+          <h5 className="card-title">Yeni Rapor Analizi</h5>
+          <p className="card-text">Lütfen analiz etmek istediğiniz rapor dosyasını (.jpg, .png) seçin.</p>
+
+          <div className="input-group">
+            <input type="file" className="form-control" accept="image/png, image/jpeg" onChange={handleFileChange} />
+            <button onClick={handleAnalyze} disabled={isLoading} className="btn btn-primary">
+              {isLoading ? (
+                <>
+                  <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                  <span className="ms-2">Analiz Ediliyor...</span>
+                </>
+              ) : 'Analiz Et'}
+            </button>
+          </div>
+
+          {message && <div className="alert alert-danger mt-3">{message}</div>}
+
+          {analysisResult && (
+            <div className="alert alert-success mt-3">
+              <h4 className="alert-heading">Analiz Sonucu:</h4>
+              <p style={{ whiteSpace: 'pre-wrap' }}>{analysisResult}</p>
+            </div>
+          )}
+        </div>
+      </div>
+
       <History key={historyKey} />
     </div>
   );

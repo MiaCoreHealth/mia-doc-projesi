@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-// YENİ: Saate saat eklemek için 'addHours' fonksiyonunu da import ediyoruz
 import { format, addHours } from 'date-fns';
 
 function History() {
@@ -16,12 +15,10 @@ function History() {
         setMessage('Geçmişi görmek için giriş yapmalısınız.');
         return;
       }
-
       try {
         const response = await axios.get('https://mia-doc-projesi.onrender.com/reports/history/', {
           headers: { 'Authorization': `Bearer ${token}` }
         });
-
         if (response.data.length === 0) {
           setMessage('Henüz analiz edilmiş bir raporunuz bulunmuyor.');
         } else {
@@ -32,37 +29,47 @@ function History() {
         setMessage('Rapor geçmişi yüklenirken bir hata oluştu.');
       }
     };
-
     fetchHistory();
   }, []);
 
-  // Gelen UTC saatini alıp, üzerine 3 saat ekleyip formatlayan fonksiyon
   const formatToLocalTime = (utcDateString) => {
     const date = new Date(utcDateString);
-    // ---- MANUEL DÜZELTME BURADA ----
-    // Türkiye UTC+3 olduğu için, gelen UTC saatine 3 saat ekliyoruz.
-    const localDate = addHours(date, 3);
-    // -------------------------------
-
-    // Şimdi, zaten düzelttiğimiz bu tarihi formatlıyoruz.
+    const localDate = addHours(date, 3); // Manuel saat dilimi düzeltmesi
     return format(localDate, "dd MMMM yyyy, HH:mm:ss");
   };
 
+  // ---- GÖRSEL DEĞİŞİKLİKLER BURADA (BOOTSTRAP ACCORDION) ----
   return (
-    <div style={{ marginTop: '40px' }}>
-      <h3>Geçmiş Raporlarım</h3>
-      {message && <p>{message}</p>}
-      <div style={{ maxHeight: '400px', overflowY: 'auto' }}>
-        {reports.map((report) => (
-          <div key={report.id} /* ... */ >
-            <p><strong>Dosya Adı:</strong> {report.original_filename}</p>
-            <p><strong>Tarih:</strong> {formatToLocalTime(report.upload_date)}</p>
-            <details>
-              <summary>Analiz Sonucunu Göster</summary>
-              <p style={{ /* ... */ }}>
+    <div className="mt-5">
+      <h3 className="mb-3">Geçmiş Raporlarım</h3>
+      {message && <p className="text-muted">{message}</p>}
+      
+      <div className="accordion" id="reportHistoryAccordion">
+        {reports.map((report, index) => (
+          <div className="accordion-item" key={report.id}>
+            <h2 className="accordion-header" id={`heading-${report.id}`}>
+              <button 
+                className={`accordion-button ${index !== 0 ? 'collapsed' : ''}`} 
+                type="button" 
+                data-bs-toggle="collapse" 
+                data-bs-target={`#collapse-${report.id}`} 
+                aria-expanded={index === 0} 
+                aria-controls={`collapse-${report.id}`}
+              >
+                <span className="fw-bold">{report.original_filename}</span>
+                <span className="ms-auto text-muted small">{formatToLocalTime(report.upload_date)}</span>
+              </button>
+            </h2>
+            <div 
+              id={`collapse-${report.id}`} 
+              className={`accordion-collapse collapse ${index === 0 ? 'show' : ''}`} 
+              aria-labelledby={`heading-${report.id}`} 
+              data-bs-parent="#reportHistoryAccordion"
+            >
+              <div className="accordion-body" style={{ whiteSpace: 'pre-wrap' }}>
                 {report.analysis_result}
-              </p>
-            </details>
+              </div>
+            </div>
           </div>
         ))}
       </div>
