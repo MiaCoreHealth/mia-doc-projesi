@@ -20,7 +20,8 @@ import security
 from database import engine, SessionLocal
 
 # Gemini API Anahtarınız
-GOOGLE_API_KEY = "AIzaSyAAnQ3tSBu8rkUtF3C_LLH4BIvZEdduEqM" # Lütfen kendi anahtarınızın burada olduğundan emin olun.
+GOOGLE_API_KEY = "import os # Bu import'un dosyanın en üstünde olduğundan emin olun
+GOOGLE_API_KEY = os.environ.get("AIzaSyAAnQ3tSBu8rkUtF3C_LLH4BIvZEdduEqM")" # Lütfen kendi anahtarınızın burada olduğundan emin olun.
 genai.configure(api_key=GOOGLE_API_KEY)
 
 # Veritabanı tablolarını oluştur

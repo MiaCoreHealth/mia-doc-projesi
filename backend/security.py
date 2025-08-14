@@ -10,7 +10,8 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 # --- YENİ: JWT (Giriş Kartı) Ayarları ---
 # Bu, bizim gizli anahtarımız. Bu anahtar sayesinde kartların bizim tarafımızdan imzalandığını anlıyoruz.
 # Bu anahtarı kimseyle paylaşmamalısınız. Gerçek bir projede bu daha karmaşık bir yerden okunur.
-SECRET_KEY = "MIA-DOC-COK-GIZLI-ANAHTAR-010203"
+import os
+SECRET_KEY = os.environ.get("SECRET_KEY")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30  # Kartın geçerlilik süresi (30 dakika)
 
