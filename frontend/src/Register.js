@@ -19,10 +19,10 @@ function Register() {
     try {
       // axios ile backend'deki /register/ endpoint'ine POST isteği gönderiyoruz.
       // Gönderdiğimiz veri, kullanıcının girdiği email ve password'den oluşuyor.
-      const response = await axios.post('http://127.0.0.1:8000/register/', {
-        email: email,
-        password: password
-      });
+      const response = await axios.post('https://mia-doc-projesi.onrender.com/register/', {
+    email: email,
+    password: password
+});
 
       // İstek başarılı olursa, backend'den gelen mesajı alıp state'e kaydediyoruz.
       setMessage(response.data.mesaj);
