@@ -15,7 +15,7 @@ function Login({ onLoginSuccess }) {
     params.append('password', password);
 
     try {
-      const response = await axios.post('https://mia-doc-projesi.onrender.com/token', params);
+      const response = await axios.post('${apiUrl}/token', params);
       localStorage.setItem('userToken', response.data.access_token);
       onLoginSuccess(response.data.access_token);
     } catch (error) {

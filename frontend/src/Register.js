@@ -11,7 +11,7 @@ function Register() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await axios.post('https://mia-doc-projesi.onrender.com/register/', {
+      const response = await axios.post('${apiUrl}/register/', {
         email: email,
         password: password
       });

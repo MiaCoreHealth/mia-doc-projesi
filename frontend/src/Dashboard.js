@@ -34,7 +34,7 @@ function Dashboard({ handleLogout }) {
     const formData = new FormData();
     formData.append('file', file);
     try {
-      const response = await axios.post('https://mia-doc-projesi.onrender.com/report/analyze/', formData, {
+      const response = await axios.post('${apiUrl}/report/analyze/', formData, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'multipart/form-data',
