@@ -10,8 +10,9 @@ function Register() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    const apiUrl = process.env.REACT_APP_API_URL;
     try {
-      const response = await axios.post(`${apiUrl}/register/', {
+      const response = await axios.post(`${apiUrl}/register/`, {
         email: email,
         password: password
       });
@@ -25,7 +26,6 @@ function Register() {
     }
   };
 
-  // ---- GÖRSEL DEĞİŞİKLİKLER BURADA ----
   return (
     <div className="card shadow-sm" style={{ width: '22rem' }}>
       <div className="card-body">

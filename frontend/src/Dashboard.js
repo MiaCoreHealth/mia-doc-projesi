@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import axios from 'axios';
-import History from './History'; // History bileşenini hala kullanıyoruz
+import History from './History';
 
 function Dashboard({ handleLogout }) {
   const [file, setFile] = useState(null);
@@ -11,12 +11,12 @@ function Dashboard({ handleLogout }) {
   const [isLoading, setIsLoading] = useState(false);
   const [historyKey, setHistoryKey] = useState(0);
 
-  // --- Fonksiyonlar aynı, değişiklik yok ---
   const handleFileChange = (event) => {
     setFile(event.target.files[0]);
     setAnalysisResult('');
     setMessage('');
   };
+
   const handleAnalyze = async () => {
     if (!file) {
       setMessage('Lütfen önce bir rapor dosyası seçin.');
@@ -33,8 +33,9 @@ function Dashboard({ handleLogout }) {
     }
     const formData = new FormData();
     formData.append('file', file);
+    const apiUrl = process.env.REACT_APP_API_URL;
     try {
-      const response = await axios.post(`${apiUrl}//report/analyze/', formData, {
+      const response = await axios.post(`${apiUrl}/report/analyze/`, formData, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'multipart/form-data',
@@ -53,7 +54,6 @@ function Dashboard({ handleLogout }) {
     }
   };
 
-  // ---- GÖRSEL DEĞİŞİKLİKLER BURADA ----
   return (
     <div>
       <nav className="navbar navbar-expand-lg navbar-light bg-light rounded mb-4 shadow-sm">
@@ -64,12 +64,10 @@ function Dashboard({ handleLogout }) {
           </button>
         </div>
       </nav>
-
       <div className="card shadow-sm">
         <div className="card-body">
           <h5 className="card-title">Yeni Rapor Analizi</h5>
           <p className="card-text">Lütfen analiz etmek istediğiniz rapor dosyasını (.jpg, .png) seçin.</p>
-
           <div className="input-group">
             <input type="file" className="form-control" accept="image/png, image/jpeg" onChange={handleFileChange} />
             <button onClick={handleAnalyze} disabled={isLoading} className="btn btn-primary">
@@ -81,18 +79,15 @@ function Dashboard({ handleLogout }) {
               ) : 'Analiz Et'}
             </button>
           </div>
-
           {message && <div className="alert alert-danger mt-3">{message}</div>}
-
           {analysisResult && (
             <div className="alert alert-success mt-3">
-              <h4 className="alert-heading">Analiz Sonucu:</h4>
+              <h4 className="alert-heading">Yeni Analiz Sonucu:</h4>
               <p style={{ whiteSpace: 'pre-wrap' }}>{analysisResult}</p>
             </div>
           )}
         </div>
       </div>
-
       <History key={historyKey} />
     </div>
   );

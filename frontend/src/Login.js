@@ -10,12 +10,15 @@ function Login({ onLoginSuccess }) {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    
     const params = new URLSearchParams();
     params.append('username', email);
     params.append('password', password);
 
+    const apiUrl = process.env.REACT_APP_API_URL;
+
     try {
-      const response = await axios.post(`${apiUrl}/token', params);
+      const response = await axios.post(`${apiUrl}/token`, params);
       localStorage.setItem('userToken', response.data.access_token);
       onLoginSuccess(response.data.access_token);
     } catch (error) {
@@ -27,7 +30,6 @@ function Login({ onLoginSuccess }) {
     }
   };
 
-  // ---- GÖRSEL DEĞİŞİKLİKLER BURADA ----
   return (
     <div className="card shadow-sm" style={{ width: '22rem' }}>
       <div className="card-body">
