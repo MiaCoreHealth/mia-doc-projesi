@@ -1,30 +1,28 @@
 // frontend/src/Dashboard.js
 
-import React, 'react';
-import { useState, useEffect } from 'react';
+// ---- HATA BURADAYDI, ŞİMDİ DÜZELTİLDİ ----
+import React, { useState, useEffect } from 'react';
+// ------------------------------------------
 import axios from 'axios';
 import History from './History';
 
 function Dashboard({ handleLogout }) {
   const [user, setUser] = useState(null);
-  // YENİ: Artık tek bir sonuç yerine, bir mesajlar dizisi tutuyoruz.
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [historyKey, setHistoryKey] = useState(0);
 
-  // E-postadan kullanıcı adını çıkaran yardımcı fonksiyon
   const getUsernameFromEmail = (email) => {
     if (!email) return '';
     const namePart = email.split('@')[0];
     return namePart.charAt(0).toUpperCase() + namePart.slice(1);
   };
-
-  // Sayfa ilk yüklendiğinde kullanıcıyı çek ve karşılama mesajını ekle
+  
   useEffect(() => {
     const fetchUserAndWelcome = async () => {
       const token = localStorage.getItem('userToken');
       if (!token) { handleLogout(); return; }
-
+      
       const apiUrl = process.env.REACT_APP_API_URL;
       try {
         const response = await axios.get(`${apiUrl}/users/me/`, {
@@ -33,7 +31,6 @@ function Dashboard({ handleLogout }) {
         const fetchedUser = response.data;
         setUser(fetchedUser);
 
-        // Sohbeti karşılama mesajıyla başlat
         setMessages([
           {
             sender: 'mia-doc',
@@ -51,15 +48,11 @@ function Dashboard({ handleLogout }) {
 
   const handleAnalyze = async (file) => {
     if (!file) return;
-
     setIsLoading(true);
     const token = localStorage.getItem('userToken');
     const apiUrl = process.env.REACT_APP_API_URL;
 
-    // Kullanıcının yüklediği dosyayı sohbet ekranına ekle
     setMessages(prev => [...prev, { sender: 'user', text: `Yüklendi: ${file.name}` }]);
-
-    // MİA-DOC'un "düşünüyorum" mesajını ekle
     setMessages(prev => [...prev, { sender: 'mia-doc', text: 'Raporunu aldım, inceliyorum...' }]);
 
     const formData = new FormData();
@@ -71,10 +64,9 @@ function Dashboard({ handleLogout }) {
           'Content-Type': 'multipart/form-data',
         },
       });
-
-      // Analiz sonucunu yeni bir MİA-DOC mesajı olarak ekle
+      
       setMessages(prev => [...prev, { sender: 'mia-doc', text: response.data.analysis_result }]);
-      setHistoryKey(prevKey => prevKey + 1); // Geçmişi yenile
+      setHistoryKey(prevKey => prevKey + 1);
 
     } catch (error) {
       const errorText = error.response ? error.response.data.detail : 'Analiz sırasında bir ağ hatası oluştu.';
@@ -84,7 +76,6 @@ function Dashboard({ handleLogout }) {
     }
   };
 
-  // Dosya seçildiğinde handleAnalyze'ı doğrudan çağıran fonksiyon
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -103,7 +94,6 @@ function Dashboard({ handleLogout }) {
         </div>
       </nav>
 
-      {/* Sohbet Mesajları Alanı */}
       <div className="chat-window card shadow-sm mb-3">
         <div className="card-body">
           {messages.map((msg, index) => (
@@ -118,11 +108,10 @@ function Dashboard({ handleLogout }) {
           )}
         </div>
       </div>
-
-      {/* Dosya Yükleme Alanı */}
+      
       <div className="input-group">
-        <input type="file" className="form-control" accept="image/png, image/jpeg" onChange={handleFileChange} disabled={isLoading} />
-        <label className="input-group-text">Rapor Yükle</label>
+        <input type="file" className="form-control" accept="image/png, image/jpeg" onChange={handleFileChange} disabled={isLoading} id="fileInput"/>
+        <label className="input-group-text" htmlFor="fileInput">Rapor Yükle</label>
       </div>
 
       <History key={historyKey} />
