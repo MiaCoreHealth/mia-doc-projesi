@@ -2,7 +2,7 @@
 import datetime
 from pydantic import BaseModel
 
-# YENİ: Kullanıcı bilgisini geri döndürürken kullanacağımız model
+# YENİ: Kullanıcı bilgisini Frontend'e gönderirken kullanacağımız model
 class User(BaseModel):
     id: int
     email: str

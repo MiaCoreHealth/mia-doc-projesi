@@ -146,3 +146,7 @@ def get_user_reports(current_user: models.User = Depends(get_current_user), db: 
 @app.get("/users/me/", response_model=schemas.User)
 def read_users_me(current_user: models.User = Depends(get_current_user)):
     return current_user
+    # YENİ: Giriş yapmış olan kullanıcının bilgilerini döndüren endpoint
+@app.get("/users/me/", response_model=schemas.User)
+def read_users_me(current_user: models.User = Depends(get_current_user)):
+    return current_user
