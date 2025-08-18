@@ -1,7 +1,7 @@
 // frontend/src/Dashboard.js
 
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom'; // Link'i import ediyoruz
 import axios from 'axios';
 import History from './History';
 
@@ -89,33 +89,13 @@ function Dashboard({ handleLogout }) {
           <span className="navbar-brand">
             {user ? `${getUsernameFromEmail(user.email)} & MİA-DOC` : 'Yükleniyor...'}
           </span>
+          {/* ---- DEĞİŞİKLİK BURADA ---- */}
           <div>
             <Link to="/profile" className="btn btn-outline-secondary me-2">Profilim</Link>
             <button onClick={handleLogout} className="btn btn-outline-danger">Çıkış Yap</button>
           </div>
+          {/* ------------------------- */}
         </div>
       </nav>
-      <div className="chat-window card shadow-sm mb-3">
-        <div className="card-body">
-          {messages.map((msg, index) => (
-            <div key={index} className={`message-bubble ${msg.sender}`}>
-              {msg.text}
-            </div>
-          ))}
-          {isLoading && (
-             <div className="message-bubble mia-doc">
-               <span className="spinner-border spinner-border-sm"></span> Düşünüyorum...
-             </div>
-          )}
-        </div>
-      </div>
-      <div className="input-group">
-        <input type="file" className="form-control" accept="image/png, image/jpeg" onChange={handleFileChange} disabled={isLoading} id="fileInput"/>
-        <label className="input-group-text" htmlFor="fileInput">Rapor Yüklendi</label>
-      </div>
-      <History key={historyKey} />
-    </div>
-  );
-}
 
-export default Dashboard;
+      <div className="chat-window card shadow
