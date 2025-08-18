@@ -22,10 +22,10 @@ from PIL import Image
 import io
 
 # Projemizin diğer dosyaları
-import models
-import schemas
-import security
-from database import engine, SessionLocal
+from . import models
+from . import schemas
+from . import security
+from .database import engine, SessionLocal
 
 # --- Kurulum ve Yapılandırma ---
 
