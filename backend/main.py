@@ -85,7 +85,7 @@ def send_verification_email(email: str, token: str):
     verification_url = f"https://mia-doc-projesi-zmsw.vercel.app/verify-email?token={token}"
     
     message = Mail(
-        from_email=('noreply@mia-doc.com', 'MİA-DOC Asistan'),
+        from_email=('vanguadwolf96@gmail.com', 'MİA-DOC Asistan'),
         to_emails=email,
         subject='MİA-DOC Hesabınızı Doğrulayın',
         html_content=f"""
