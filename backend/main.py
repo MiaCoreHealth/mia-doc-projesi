@@ -37,7 +37,7 @@ genai.configure(api_key=GOOGLE_API_KEY)
 # Veritabanı tablolarını oluştur
 models.Base.metadata.create_all(bind=engine)
 
-app = FastAPI()
+app = FastAPI(root_path="/")
 
 # --- CORS Ayarları ---
 origins = [
@@ -193,5 +193,3 @@ async def analyze_report(file: UploadFile = File(...), current_user: models.User
 def get_user_reports(current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
     reports = db.query(models.Report).filter(models.Report.owner_id == current_user.id).order_by(models.Report.upload_date.desc()).all()
     return reports
-    # Bu satır, Vercel'in FastAPI uygulamasını tanıması için gereklidir.
-handler = app
