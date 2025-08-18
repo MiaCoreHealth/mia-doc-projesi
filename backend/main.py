@@ -208,3 +208,16 @@ async def analyze_report(file: UploadFile = File(...), current_user: models.User
 def get_user_reports(current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
     reports = db.query(models.Report).filter(models.Report.owner_id == current_user.id).order_by(models.Report.upload_date.desc()).all()
     return reports
+    # YENİ: Kullanıcının profil bilgilerini getiren endpoint
+@app.get("/profile/me/", response_model=schemas.User)
+def get_user_profile(current_user: models.User = Depends(get_current_user)):
+    return current_user
+
+# YENİ: Kullanıcının profil bilgilerini güncelleyen endpoint
+@app.post("/profile/me/", response_model=schemas.User)
+def update_user_profile(profile_data: schemas.ProfileUpdate, current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
+    current_user.chronic_diseases = profile_data.chronic_diseases
+    current_user.medications = profile_data.medications
+    db.commit()
+    db.refresh(current_user)
+    return current_user

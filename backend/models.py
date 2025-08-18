@@ -1,7 +1,6 @@
 # backend/models.py
 
 import datetime
-# YENİ: Boolean tipini içe aktarıyoruz
 from sqlalchemy import Column, Integer, String, Text, DateTime, ForeignKey, Boolean
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
@@ -13,9 +12,11 @@ class User(Base):
     id = Column(Integer, primary_key=True, index=True)
     email = Column(String, unique=True, index=True)
     hashed_password = Column(String)
-    # YENİ: Kullanıcının hesabını doğrulayıp doğrulamadığını tutacak sütun.
-    # Varsayılan olarak False (doğrulanmamış) olacak.
     is_active = Column(Boolean, default=False)
+
+    # YENİ ALANLAR: Bu alanlar boş olabilir (nullable=True)
+    chronic_diseases = Column(Text, nullable=True) # Kronik hastalıklar
+    medications = Column(Text, nullable=True)      # Sürekli kullanılan ilaçlar
 
     reports = relationship("Report", back_populates="owner")
 

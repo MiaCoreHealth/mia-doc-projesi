@@ -1,11 +1,19 @@
 # backend/schemas.py
 import datetime
 from pydantic import BaseModel
+from typing import Optional # YENİ: Boş olabilecek alanlar için
 
-# YENİ: Kullanıcı bilgisini Frontend'e gönderirken kullanacağımız model
+# YENİ: Profil güncelleme için kullanılacak model
+class ProfileUpdate(BaseModel):
+    chronic_diseases: Optional[str] = None
+    medications: Optional[str] = None
+
 class User(BaseModel):
     id: int
     email: str
+    # YENİ: Kullanıcı bilgisini döndürürken bu alanları da ekliyoruz
+    chronic_diseases: Optional[str] = None
+    medications: Optional[str] = None
 
     class Config:
         from_attributes = True
