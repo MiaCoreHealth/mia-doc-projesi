@@ -81,6 +81,8 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
 
 # --- E-posta Gönderme Fonksiyonu ---
 def send_verification_email(email: str, token: str):
+    api_key = os.environ.get('SENDGRID_API_KEY')
+    print(f"--- DIAGNOSTIC: SendGrid API Anahtarını Okumayı Denedim. Anahtar Var mı?: {api_key is not None}, İlk 5 Karakter: {str(api_key)[:5]}")
     verification_url = f"https://mia-doc-projesi-zmsw.vercel.app/verify-email?token={token}"
     message = Mail(
         from_email=('noreply@mia-doc.com', 'MİA-DOC Asistan'),
