@@ -216,8 +216,10 @@ def get_user_profile(current_user: models.User = Depends(get_current_user)):
 # YENİ: Kullanıcının profil bilgilerini güncelleyen endpoint
 @app.post("/profile/me/", response_model=schemas.User)
 def update_user_profile(profile_data: schemas.ProfileUpdate, current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
-    current_user.chronic_diseases = profile_data.chronic_diseases
-    current_user.medications = profile_data.medications
+    # Gelen verileri döngüyle alıp güncellemek daha temiz bir yöntemdir
+    for field, value in profile_data.model_dump(exclude_unset=True).items():
+        setattr(current_user, field, value)
+
     db.commit()
     db.refresh(current_user)
     return current_user

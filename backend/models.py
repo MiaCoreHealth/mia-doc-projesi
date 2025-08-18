@@ -1,7 +1,7 @@
 # backend/models.py
 
 import datetime
-from sqlalchemy import Column, Integer, String, Text, DateTime, ForeignKey, Boolean
+from sqlalchemy import Column, Integer, String, Text, DateTime, ForeignKey, Boolean, Date, Float
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from database import Base
@@ -14,15 +14,26 @@ class User(Base):
     hashed_password = Column(String)
     is_active = Column(Boolean, default=False)
 
-    # YENİ ALANLAR: Bu alanlar boş olabilir (nullable=True)
-    chronic_diseases = Column(Text, nullable=True) # Kronik hastalıklar
-    medications = Column(Text, nullable=True)      # Sürekli kullanılan ilaçlar
+    # --- KAPSAMLI PROFİL ALANLARI ---
+    # Önceki alanlar
+    chronic_diseases = Column(Text, nullable=True)
+    medications = Column(Text, nullable=True)
+
+    # Yeni eklenen alanlar
+    date_of_birth = Column(Date, nullable=True)            # Doğum Tarihi
+    gender = Column(String, nullable=True)                 # Cinsiyet
+    height_cm = Column(Float, nullable=True)               # Boy (cm)
+    weight_kg = Column(Float, nullable=True)               # Kilo (kg)
+    pregnancy_status = Column(String, nullable=True)       # Hamilelik Durumu
+    smoking_status = Column(String, nullable=True)         # Sigara Kullanımı
+    alcohol_status = Column(String, nullable=True)         # Alkol Kullanımı
+    family_history = Column(Text, nullable=True)           # Aile Öyküsü
 
     reports = relationship("Report", back_populates="owner")
 
 class Report(Base):
     __tablename__ = "reports"
-
+    # ... (Report sınıfı aynı kalıyor, değişiklik yok)
     id = Column(Integer, primary_key=True, index=True)
     original_filename = Column(String)
     analysis_result = Column(Text)

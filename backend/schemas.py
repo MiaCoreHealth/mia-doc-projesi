@@ -1,19 +1,33 @@
 # backend/schemas.py
 import datetime
-from pydantic import BaseModel
-from typing import Optional # YENİ: Boş olabilecek alanlar için
+from pydantic import BaseModel, Field
+from typing import Optional
 
-# YENİ: Profil güncelleme için kullanılacak model
 class ProfileUpdate(BaseModel):
     chronic_diseases: Optional[str] = None
     medications: Optional[str] = None
+    date_of_birth: Optional[datetime.date] = None
+    gender: Optional[str] = None
+    height_cm: Optional[float] = None
+    weight_kg: Optional[float] = None
+    pregnancy_status: Optional[str] = None
+    smoking_status: Optional[str] = None
+    alcohol_status: Optional[str] = None
+    family_history: Optional[str] = None
 
 class User(BaseModel):
     id: int
     email: str
-    # YENİ: Kullanıcı bilgisini döndürürken bu alanları da ekliyoruz
     chronic_diseases: Optional[str] = None
     medications: Optional[str] = None
+    date_of_birth: Optional[datetime.date] = None
+    gender: Optional[str] = None
+    height_cm: Optional[float] = None
+    weight_kg: Optional[float] = None
+    pregnancy_status: Optional[str] = None
+    smoking_status: Optional[str] = None
+    alcohol_status: Optional[str] = None
+    family_history: Optional[str] = None
 
     class Config:
         from_attributes = True
@@ -23,7 +37,6 @@ class Report(BaseModel):
     original_filename: str
     analysis_result: str
     upload_date: datetime.datetime
-
     class Config:
         from_attributes = True
 
